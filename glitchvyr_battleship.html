@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLITCHVYR BATTLESHIP</title>
+<style>
+:root{--bg:#07111f;--panel:#0d1d31;--panel2:#102740;--cyan:#42e8ff;--blue:#287bff;--text:#eaf8ff;--muted:#8ba8bd;--hit:#ff5578;--miss:#91a9bd;--gold:#ffd166}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#123253 0%,#07111f 55%,#040913 100%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text);display:flex;justify-content:center;padding:22px}
+button{font:inherit;cursor:pointer;border:0;border-radius:12px;font-weight:800;transition:transform .15s,filter .15s}button:hover{filter:brightness(1.12);transform:translateY(-1px)}button:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.app{width:min(1120px,100%)}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.brand{font-weight:1000;letter-spacing:2px;font-size:clamp(20px,4vw,32px)}.brand span{color:var(--cyan);text-shadow:0 0 18px #42e8ff70}.tag{color:var(--muted);font-size:12px;letter-spacing:2px}.pill{border:1px solid #284b69;background:#0b1b2d;color:var(--cyan);padding:8px 12px;border-radius:999px;font-size:12px}
+.screen{display:none}.screen.active{display:block}.hero{background:linear-gradient(135deg,#102a45eF,#091626f2);border:1px solid #254a69;border-radius:24px;padding:clamp(22px,5vw,52px);position:relative;overflow:hidden;box-shadow:0 22px 65px #0005}.hero:after{content:"";position:absolute;width:300px;height:300px;border:1px solid #42e8ff24;border-radius:50%;right:-85px;top:-110px;box-shadow:0 0 0 30px #42e8ff08,0 0 0 65px #42e8ff06;pointer-events:none}.eyebrow{color:var(--cyan);font-weight:900;letter-spacing:3px;font-size:12px}.hero h1{font-size:clamp(34px,7vw,68px);line-height:.98;margin:16px 0}.hero h1 em{font-style:normal;color:var(--cyan)}.hero p{max-width:550px;color:#b5cadb;line-height:1.65}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.primary{background:linear-gradient(100deg,#2b8cff,#38d9ef);color:#04111e;padding:14px 22px;box-shadow:0 8px 25px #168cff30}.secondary{background:#132c43;color:var(--text);border:1px solid #315775;padding:13px 18px}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}.card{background:#0b1a2b;border:1px solid #203d56;padding:17px;border-radius:16px}.card b{display:block;font-size:22px;color:var(--cyan);margin-bottom:4px}.card small{color:var(--muted)}.section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}.section-title h2{margin:0;font-size:24px}.muted{color:var(--muted)}.game-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}.board-panel{background:#0b1a2b;border:1px solid #23445f;border-radius:18px;padding:16px;min-width:0}.board-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}.board-head h3{margin:0;font-size:16px}.board-head span{font-size:11px;color:var(--muted)}.board{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:3px;width:100%;aspect-ratio:1}.cell{min-width:0;aspect-ratio:1;border-radius:4px;background:#12304a;border:1px solid #204663;display:flex;align-items:center;justify-content:center;color:#c4e8f6;font-size:clamp(9px,1.7vw,17px);font-weight:900;padding:0}.cell.ship{background:#2c6a8d;border-color:#54a8cf}.cell.hit{background:#66273d;border-color:#ff5578;color:#ffb5c4}.cell.miss{background:#0a1421;border-color:#2c4355;color:#91a9bd}.cell.sunk{background:#8d263d;border-color:#ff7890;color:white}.cell.target{cursor:pointer}.cell.target:hover{outline:2px solid var(--cyan);background:#1b4963}.cell:disabled{cursor:default}.status{padding:12px 15px;background:#0b1b2d;border:1px solid #23445f;border-radius:12px;margin:14px 0;color:#c9e4f3;min-height:45px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.smallbtn{padding:9px 12px;background:#132c43;border:1px solid #315775;color:#d9f4ff;font-size:12px}.table{width:100%;border-collapse:collapse;margin-top:12px}.table th,.table td{text-align:left;padding:13px 10px;border-bottom:1px solid #20394f}.table th{font-size:11px;color:var(--muted);letter-spacing:1px}.table td{font-size:14px}.rank{color:var(--gold);font-weight:900}.empty{text-align:center;color:var(--muted);padding:25px}.notice{font-size:12px;color:var(--muted);line-height:1.5;margin-top:16px}.back{margin-bottom:15px}.settings-row{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:15px 0;border-bottom:1px solid #20394f}.toggle{accent-color:var(--cyan);width:18px;height:18px}
+@media(max-width:720px){body{padding:12px}.top{align-items:flex-start}.game-layout{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.hero{padding:25px 20px}.board-panel{padding:10px}.board{gap:2px}.cell{border-radius:3px}.section-title h2{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div><div class="brand">GLITCH<span>VYR</span> BATTLESHIP</div><div class="tag">CLASSIC NAVAL DUEL</div></div>
+    <div class="pill">● OFFLINE PROTOTYPE</div>
+  </header>
+
+  <section id="home" class="screen active">
+    <div class="hero">
+      <div class="eyebrow">YOUR FLEET. YOUR STRATEGY.</div>
+      <h1>READY FOR<br><em>BATTLE?</em></h1>
+      <p>Классический морской бой из школьной тетрадки — в стильной неоновой оболочке. Расставь флот, найди корабли противника и потопи их все.</p>
+      <div class="actions">
+        <button class="primary" onclick="startGame()">▶ ИГРАТЬ</button>
+        <button class="secondary" onclick="showScreen('ranking');renderRanking()">🏆 RANKING</button>
+        <button class="secondary" onclick="showScreen('stats');renderStats()">📊 МОЯ СТАТИСТИКА</button>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card"><b id="homeWins">0</b><small>ПОБЕД</small></div>
+      <div class="card"><b id="homeBest">—</b><small>ЛУЧШЕЕ ВРЕМЯ</small></div>
+      <div class="card"><b id="homeLuck">0%</b><small>ТОЧНОСТЬ</small></div>
+    </div>
+    <p class="notice">Первая версия: игра работает локально в браузере. Рекорды сохраняются на этом устройстве. Общий рейтинг между игроками подключим позже через Telegram и сервер.</p>
+  </section>
+
+  <section id="game" class="screen">
+    <button class="secondary back" onclick="goHome()">← В МЕНЮ</button>
+    <div class="section-title"><h2>⚓ Морской бой</h2><span class="pill" id="turnPill">ТВОЙ ХОД</span></div>
+    <div class="game-layout">
+      <div class="board-panel"><div class="board-head"><h3>ТВОЙ ФЛОТ</h3><span>Твои корабли</span></div><div id="playerBoard" class="board"></div></div>
+      <div class="board-panel"><div class="board-head"><h3>ПРОТИВНИК</h3><span>Нажми на клетку для выстрела</span></div><div id="enemyBoard" class="board"></div></div>
+    </div>
+    <div class="status" id="status">Подготовка к бою...</div>
+    <div class="toolbar"><button class="smallbtn" onclick="startGame()">↻ НОВАЯ ИГРА</button><button class="smallbtn" onclick="showScreen('stats');renderStats()">📊 СТАТИСТИКА</button></div>
+  </section>
+
+  <section id="ranking" class="screen">
+    <button class="secondary back" onclick="goHome()">← В МЕНЮ</button>
+    <div class="hero"><div class="eyebrow">CAPTAINS LEADERBOARD</div><h1>LUCK <em>RANKING</em></h1><p>Личный рейтинг лучших результатов на этом устройстве. Чем больше побед и лучше точность, тем выше твой результат.</p></div>
+    <div class="board-panel" style="margin-top:16px"><div class="section-title"><h2>🏆 Таблица лидеров</h2><span class="pill">LOCAL</span></div><div id="rankingContent"></div><p class="notice">Пока здесь отображаются только результаты, сохранённые в этом браузере. Для общего рейтинга всех игроков потребуется подключить серверную базу данных.</p></div>
+  </section>
+
+  <section id="stats" class="screen">
+    <button class="secondary back" onclick="goHome()">← В МЕНЮ</button>
+    <div class="hero"><div class="eyebrow">YOUR CAPTAIN PROFILE</div><h1>MY <em>STATS</em></h1><p>Каждый матч приближает тебя к званию легендарного капитана.</p>
+      <div class="cards">
+        <div class="card"><b id="statGames">0</b><small>СЫГРАНО МАТЧЕЙ</small></div>
+        <div class="card"><b id="statWins">0</b><small>ПОБЕДЫ</small></div>
+        <div class="card"><b id="statAccuracy">0%</b><small>ТОЧНОСТЬ</small></div>
+      </div>
+      <div class="cards">
+        <div class="card"><b id="statBest">—</b><small>ЛУЧШЕЕ ВРЕМЯ ПОБЕДЫ</small></div>
+        <div class="card"><b id="statShots">0</b><small>ВЫСТРЕЛЫ</small></div>
+        <div class="card"><b id="statHits">0</b><small>ПОПАДАНИЯ</small></div>
+      </div>
+    </div>
+  </section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const SHIPS=[4,3,3,2,2,2,1,1,1,1];
+const emptyStats=()=>({games:0,wins:0,shots:0,hits:0,bestSeconds:null,history:[]});
+let stats=loadStats(), playerShips=[], enemyShips=[], playerShots=new Set(), enemyShots=new Set(), currentHits=0, currentShots=0, startedAt=0, gameActive=false, busy=false;
+function loadStats(){try{return {...emptyStats(),...JSON.parse(localStorage.getItem('gv_battleship_stats')||'{}')}}catch(e){return emptyStats()}}
+function saveStats(){localStorage.setItem('gv_battleship_stats',JSON.stringify(stats));updateHome()}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active')}
+function goHome(){gameActive=false;busy=false;showScreen('home');updateHome()}
+function updateHome(){ $('homeWins').textContent=stats.wins; $('homeBest').textContent=stats.bestSeconds===null?'—':formatTime(stats.bestSeconds); $('homeLuck').textContent=stats.shots?Math.round(stats.hits/stats.shots*100)+'%':'0%'; }
+function formatTime(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function key(r,c){return r*10+c}
+function placeFleet(){let occupied=new Set(), ships=[]; for(const size of SHIPS){let placed=false,tries=0;while(!placed&&tries++<3000){let horizontal=Math.random()<.5,r=Math.floor(Math.random()*10),c=Math.floor(Math.random()*10),cells=[];for(let i=0;i<size;i++){let rr=r+(horizontal?0:i),cc=c+(horizontal?i:0);if(rr>9||cc>9){cells=[];break}cells.push(key(rr,cc))}if(!cells.length)continue;let valid=true;for(const k of cells){let rr=Math.floor(k/10),cc=k%10;for(let dr=-1;dr<=1;dr++)for(let dc=-1;dc<=1;dc++){let nr=rr+dr,nc=cc+dc;if(nr>=0&&nr<10&&nc>=0&&nc<10&&occupied.has(key(nr,nc)))valid=false}}if(valid){cells.forEach(k=>occupied.add(k));ships.push({cells,hits:new Set()});placed=true}}if(!placed)return placeFleet()}return ships}
+function shipAt(ships,k){return ships.find(s=>s.cells.includes(k))}
+function startGame(){playerShips=placeFleet();enemyShips=placeFleet();playerShots=new Set();enemyShots=new Set();currentHits=0;currentShots=0;startedAt=Date.now();gameActive=true;busy=false;showScreen('game');$('status').textContent='Твой ход! Выбери клетку на поле противника.';$('turnPill').textContent='ТВОЙ ХОД';renderBoards()}
+function renderBoards(){renderBoard('playerBoard',playerShips,enemyShots,false);renderBoard('enemyBoard',enemyShips,playerShots,true)}
+function renderBoard(id,ships,shots,clickable){let el=$(id);el.innerHTML='';for(let r=0;r<10;r++)for(let c=0;c<10;c++){let k=key(r,c),ship=shipAt(ships,k),hit=shots.has(k),b=document.createElement('button');b.className='cell';b.setAttribute('aria-label',`${r+1}, ${c+1}`);if(hit){if(ship){b.classList.add('hit');b.textContent='✕';if(ship.hits.size===ship.cells.length)b.classList.add('sunk')}else{b.classList.add('miss');b.textContent='•'}}else if(ship&&!clickable){b.classList.add('ship');b.textContent='■'}if(clickable&&!hit&&gameActive&&!busy){b.classList.add('target');b.onclick=()=>playerFire(k)}else b.disabled=true;el.appendChild(b)}}
+function playerFire(k){if(!gameActive||busy||playerShots.has(k))return;playerShots.add(k);currentShots++;stats.shots++;let ship=shipAt(enemyShips,k);if(ship){ship.hits.add(k);currentHits++;stats.hits++;$('status').textContent=ship.hits.size===ship.cells.length?'💥 Корабль противника потоплен! Отличный выстрел!':'💥 Попадание! Стреляй ещё раз.';if(enemyShips.every(s=>s.hits.size===s.cells.length)){finishGame(true);return}}else{$('status').textContent='💦 Промах! Теперь ход компьютера.';busy=true;$('turnPill').textContent='ХОД КОМПЬЮТЕРА';renderBoards();setTimeout(aiTurn,650);return}renderBoards()}
+function aiTurn(){if(!gameActive)return;let choices=[];for(let k=0;k<100;k++)if(!enemyShots.has(k))choices.push(k);if(!choices.length)return;let k=choices[Math.floor(Math.random()*choices.length)];enemyShots.add(k);let ship=shipAt(playerShips,k);if(ship){ship.hits.add(k);$('status').textContent=ship.hits.size===ship.cells.length?'🤖 Компьютер потопил твой корабль! Твой ход.':'🤖 Компьютер попал! Твой ход.';if(playerShips.every(s=>s.hits.size===s.cells.length)){renderBoards();finishGame(false);return}}else $('status').textContent='🤖 Компьютер промахнулся! Твой ход.';busy=false;$('turnPill').textContent='ТВОЙ ХОД';renderBoards()}
+function finishGame(won){gameActive=false;busy=false;let seconds=Math.max(1,Math.floor((Date.now()-startedAt)/1000));stats.games++;if(won){stats.wins++;if(stats.bestSeconds===null||seconds<stats.bestSeconds)stats.bestSeconds=seconds;stats.history.push({seconds,accuracy:currentShots?Math.round(currentHits/currentShots*100):0,date:new Date().toLocaleDateString()});stats.history=stats.history.slice(-20);$('status').textContent=`🏆 ПОБЕДА! Ты потопил весь флот за ${formatTime(seconds)}. Точность: ${currentShots?Math.round(currentHits/currentShots*100):0}%.`}else $('status').textContent='💀 Поражение! Компьютер потопил весь твой флот. Попробуешь ещё раз?';saveStats();$('turnPill').textContent=won?'ПОБЕДА':'ПОРАЖЕНИЕ';renderBoards();const b=document.createElement('button');b.className='smallbtn';b.textContent='⚓ СЫГРАТЬ ЕЩЁ';b.onclick=startGame;$('status').appendChild(document.createElement('br'));$('status').appendChild(b)}
+function renderRanking(){let content=$('rankingContent');if(!stats.history.length){content.innerHTML='<div class="empty">Пока нет побед.<br>Сыграй матч, чтобы попасть в рейтинг!</div>';return}let sorted=[...stats.history].sort((a,b)=>b.accuracy-a.accuracy||a.seconds-b.seconds);content.innerHTML='<table class="table"><thead><tr><th>МЕСТО</th><th>КАПИТАН</th><th>ТОЧНОСТЬ</th><th>ВРЕМЯ</th></tr></thead><tbody>'+sorted.map((x,i)=>`<tr><td class="rank">${['🥇','🥈','🥉'][i]||('#'+(i+1))}</td><td>GLITCHVYR</td><td>${x.accuracy}%</td><td>${formatTime(x.seconds)}</td></tr>`).join('')+'</tbody></table>'}
+function renderStats(){$('statGames').textContent=stats.games;$('statWins').textContent=stats.wins;$('statAccuracy').textContent=stats.shots?Math.round(stats.hits/stats.shots*100)+'%':'0%';$('statBest').textContent=stats.bestSeconds===null?'—':formatTime(stats.bestSeconds);$('statShots').textContent=stats.shots;$('statHits').textContent=stats.hits}
+updateHome();
+</script>
+</body>
+</html>
